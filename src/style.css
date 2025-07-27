@@ -59,12 +59,17 @@
 }
 
 .swipe-history-item {
-  margin-bottom: 15px;
+  margin-bottom: 0;
   padding: 15px;
   border: none;
   border-bottom: 1px solid var(--border-color);
   border-radius: 0;
   background-color: var(--bg2);
+  transition: background-color 0.2s;
+}
+
+.swipe-history-item:hover {
+    background-color: var(--bg3);
 }
 
 .swipe-history-item:last-child {
@@ -75,4 +80,9 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   margin-top: 5px;
+  max-height: 200px; /* Limit the height of long swipes */
+  overflow-y: auto;   /* Add a scrollbar if content overflows */
+  background-color: var(--bg1);
+  padding: 10px;
+  border-radius: 5px;
 }
