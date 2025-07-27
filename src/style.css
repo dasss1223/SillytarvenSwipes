@@ -23,6 +23,7 @@
 }
 
 .swipe-history-modal-content {
+  background-color: #2c2f33; /* Solid fallback color */
   background-color: var(--bg1);
   color: var(--text-color);
   margin: auto;
