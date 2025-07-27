@@ -1,0 +1,12 @@
+{
+    "display_name": "Swipe History",
+    "loading_order": 1,
+    "requires": [],
+    "optional": [],
+    "js": "src/index.js",
+    "css": "src/style.css",
+    "author": "dasss1223",
+    "version": "1.0.0",
+    "homePage": "https://github.com/dasss1223/SillytarvenSwipes",
+    "auto_update": true
+}
