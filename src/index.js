@@ -69,6 +69,12 @@
         message.mes = swipes[swipeIndex];
         message.swipe_id = swipeIndex;
 
+        // Update the swipe counter UI
+        const swipeCounter = messageElement.querySelector('.swipe-counter, .swipes-counter, [class*="counter"]');
+        if (swipeCounter) {
+            swipeCounter.textContent = `${swipeIndex + 1}/${swipes.length}`;
+        }
+
         // Close the modal first to ensure it doesn't interfere.
         closeModal();
 
