@@ -13,7 +13,7 @@
 
 #swipe-history-modal {
   position: fixed;
-  z-index: 10001; /* Higher than SillyTavern's UI */
+  z-index: 2147483647; /* Ensure it's above all other UI elements, especially on mobile */
   left: 0;
   top: 0;
   width: 100%;
@@ -23,6 +23,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Extra mobile tweaks to guarantee modal covers the full viewport on mobile browsers */
+@media (max-width: 768px) {
+  #swipe-history-modal {
+    inset: 0;            /* top, right, bottom, left = 0 */
+    width: 100vw;        /* full viewport width */
+    height: 100vh;       /* full viewport height */
+    overscroll-behavior: contain;
+  }
 }
 
 .swipe-history-modal-content {

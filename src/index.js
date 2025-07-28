@@ -92,10 +92,7 @@
         context.saveChat();
 
         // Close the modal
-        const modal = document.getElementById('swipe-history-modal');
-        if (modal) {
-            modal.remove();
-        }
+        closeModal();
     }
 
     function showSwipesModal(messageElement, mesId, swipes) {
@@ -113,7 +110,7 @@
         const closeButton = document.createElement('span');
         closeButton.className = 'swipe-history-modal-close';
         closeButton.innerHTML = '&times;';
-        closeButton.onclick = () => modal.remove();
+        closeButton.onclick = closeModal;
 
         const title = document.createElement('h3');
         title.textContent = 'Swipe History';
@@ -143,12 +140,24 @@
         modal.appendChild(modalContent);
 
         document.body.appendChild(modal);
+        // Prevent background scroll while the modal is open
+        document.documentElement.style.overflow = 'hidden';
 
         modal.onclick = (e) => {
             if (e.target === modal) {
-                modal.remove();
+                closeModal();
             }
         };
+    }
+
+    // Helper to close the modal and restore scrolling
+    function closeModal() {
+        const modal = document.getElementById('swipe-history-modal');
+        if (modal) {
+            modal.remove();
+        }
+        // Re-enable page scrolling that we disabled when opening the modal
+        document.documentElement.style.overflow = '';
     }
 
     function initialize() {
