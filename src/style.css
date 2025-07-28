@@ -13,7 +13,7 @@
 
 #swipe-history-modal {
   position: fixed;
-  z-index: 2147483647; /* Ensure it's above all other UI elements, especially on mobile */
+  z-index: 999999 !important; /* Extremely high z-index to ensure it's on top */
   left: 0;
   top: 0;
   width: 100%;
