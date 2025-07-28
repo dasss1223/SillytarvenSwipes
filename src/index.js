@@ -2,15 +2,28 @@
     'use strict';
 
     function addHistoryButton(messageElement) {
-        // Don't add a button if one already exists
-        if (messageElement.querySelector('.swipe-history-button')) return;
+        console.log('Swipe History: Checking message element for history button:', messageElement);
+        if (messageElement.querySelector('.swipe-history-button')) {
+            console.log('Swipe History: Button already exists.');
+            return;
+        }
 
-        // Find a more generic container for the swipe counter and message block.
-        // This is more likely to work on both desktop and mobile.
-        const messageContent = messageElement.querySelector('.mes_text, .message_content');
-        const swipeCounter = messageElement.querySelector('.swipes-counter, .swipe-counter');
+        const isMobile = document.body.classList.contains('mobile') || document.documentElement.classList.contains('mobile');
+        console.log('Swipe History: Mobile layout detected:', isMobile);
 
-        if (messageContent && swipeCounter) {
+        let swipeCounter;
+        if (isMobile) {
+            swipeCounter = messageElement.querySelector('.swipe-counter, .swipes-counter, [class*="counter"]');
+        } else {
+            swipeCounter = messageElement.querySelector('.swipes-counter');
+        }
+
+        const mesBlock = messageElement.querySelector('.mes_block, .message_content, .mes_text');
+
+        console.log('Swipe History: Found swipe counter:', swipeCounter);
+        console.log('Swipe History: Found message block:', mesBlock);
+
+        if (swipeCounter && mesBlock) {
             const button = document.createElement('div');
             button.className = 'swipe-history-button fa-solid fa-clock-rotate-left interactable';
             button.title = 'Show Swipe History';
@@ -150,10 +163,9 @@
             for (const mutation of mutations) {
                 if (mutation.addedNodes.length > 0) {
                     mutation.addedNodes.forEach(node => {
-                    // Use a more generic selector for messages.
-                    if (node.nodeType === 1 && (node.matches('.mes') || node.matches('.message')) && node.getAttribute('is_user') === 'false') {
-                        addHistoryButton(node);
-                    }
+                        if (node.nodeType === 1 && node.matches('.mes[is_user="false"], .message[is_user="false"], [data-is-user="false"]')) {
+                            addHistoryButton(node);
+                        }
                     });
                 }
             }
@@ -162,7 +174,7 @@
         observer.observe(chatElement, { childList: true, subtree: true });
 
         // Initial run for messages already on the page
-        chatElement.querySelectorAll('.mes[is_user="false"], .message[is_user="false"]').forEach(addHistoryButton);
+        chatElement.querySelectorAll('.mes[is_user="false"], .message[is_user="false"], [data-is-user="false"]').forEach(addHistoryButton);
     }
 
     // Start the initialization process

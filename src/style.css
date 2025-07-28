@@ -1,7 +1,10 @@
 .swipe-history-button {
+  display: inline-block !important;
+  visibility: visible !important;
   cursor: pointer;
   opacity: 0.5;
   margin-left: 10px;
+  z-index: 9999; /* Ensure it's on top of other elements */
 }
 
 .swipe-history-button:hover {
@@ -28,11 +31,21 @@
   margin: auto;
   padding: 20px;
   border: 1px solid var(--border-color);
-  width: 80%;
+  width: 90%; /* Use a percentage for better responsiveness */
   max-width: 700px;
   border-radius: 10px;
   position: relative;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex; /* Use flexbox for better centering */
+  flex-direction: column;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+  .swipe-history-modal-content {
+    width: 95%;
+    padding: 15px;
+  }
 }
 
 .swipe-history-modal-close {
