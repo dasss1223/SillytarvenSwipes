@@ -2,12 +2,15 @@
     'use strict';
 
     function addHistoryButton(messageElement) {
+        // Don't add a button if one already exists
         if (messageElement.querySelector('.swipe-history-button')) return;
 
-        const swipeCounter = messageElement.querySelector('.swipes-counter');
-        const mesBlock = messageElement.querySelector('.mes_block');
+        // Find a more generic container for the swipe counter and message block.
+        // This is more likely to work on both desktop and mobile.
+        const messageContent = messageElement.querySelector('.mes_text, .message_content');
+        const swipeCounter = messageElement.querySelector('.swipes-counter, .swipe-counter');
 
-        if (swipeCounter && mesBlock) {
+        if (messageContent && swipeCounter) {
             const button = document.createElement('div');
             button.className = 'swipe-history-button fa-solid fa-clock-rotate-left interactable';
             button.title = 'Show Swipe History';
@@ -147,9 +150,10 @@
             for (const mutation of mutations) {
                 if (mutation.addedNodes.length > 0) {
                     mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === 1 && node.matches('.mes[is_user="false"]')) {
-                            addHistoryButton(node);
-                        }
+                    // Use a more generic selector for messages.
+                    if (node.nodeType === 1 && (node.matches('.mes') || node.matches('.message')) && node.getAttribute('is_user') === 'false') {
+                        addHistoryButton(node);
+                    }
                     });
                 }
             }
@@ -158,7 +162,7 @@
         observer.observe(chatElement, { childList: true, subtree: true });
 
         // Initial run for messages already on the page
-        chatElement.querySelectorAll('.mes[is_user="false"]').forEach(addHistoryButton);
+        chatElement.querySelectorAll('.mes[is_user="false"], .message[is_user="false"]').forEach(addHistoryButton);
     }
 
     // Start the initialization process
