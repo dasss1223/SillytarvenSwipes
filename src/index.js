@@ -2,14 +2,11 @@
     'use strict';
 
     function addHistoryButton(messageElement) {
-        console.log('Swipe History: Checking message element for history button:', messageElement);
         if (messageElement.querySelector('.swipe-history-button')) {
-            console.log('Swipe History: Button already exists.');
             return;
         }
 
         const isMobile = document.body.classList.contains('mobile') || document.documentElement.classList.contains('mobile');
-        console.log('Swipe History: Mobile layout detected:', isMobile);
 
         let swipeCounter;
         if (isMobile) {
@@ -19,9 +16,6 @@
         }
 
         const mesBlock = messageElement.querySelector('.mes_block, .message_content, .mes_text');
-
-        console.log('Swipe History: Found swipe counter:', swipeCounter);
-        console.log('Swipe History: Found message block:', mesBlock);
 
         if (swipeCounter && mesBlock) {
             const button = document.createElement('div');
@@ -69,12 +63,6 @@
         message.mes = swipes[swipeIndex];
         message.swipe_id = swipeIndex;
 
-        // Update the swipe counter UI
-        const swipeCounter = messageElement.querySelector('.swipe-counter, .swipes-counter, [class*="counter"]');
-        if (swipeCounter) {
-            swipeCounter.textContent = `${swipeIndex + 1}/${swipes.length}`;
-        }
-
         // Close the modal first to ensure it doesn't interfere.
         closeModal();
 
@@ -90,6 +78,16 @@
             const doneButton = messageElement.querySelector('.mes_edit_done');
             if (doneButton) {
                 doneButton.click();
+
+                // After the native render is triggered, wait a moment then update the counter.
+                // This ensures our update isn't overwritten.
+                setTimeout(() => {
+                    const swipeCounter = messageElement.querySelector('.swipe-counter, .swipes-counter, [class*="counter"]');
+                    if (swipeCounter) {
+                        swipeCounter.textContent = `${swipeIndex + 1}/${swipes.length}`;
+                    }
+                }, 100);
+
             } else {
                 console.error('Swipe History: Could not find the confirm edit button. Saving manually.');
                 context.saveChat(); // Fallback to manual save if the button isn't found.
