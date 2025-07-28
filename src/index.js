@@ -60,7 +60,7 @@
         }
     }
 
-    function selectSwipe(messageElement, mesId, swipeIndex) {
+    async function selectSwipe(messageElement, mesId, swipeIndex) {
         const context = window.SillyTavern.getContext();
         const message = context.chat[mesId];
         const swipes = message.swipes;
@@ -69,30 +69,29 @@
         message.mes = swipes[swipeIndex];
         message.swipe_id = swipeIndex;
 
-        // Update the UI
-        const mesBlock = messageElement.querySelector('.mes_block .mes_text');
-        if (mesBlock) {
-            // First, check if showdown and DOMPurify are available
-            if (window.showdown && window.DOMPurify) {
-                const converter = new showdown.Converter();
-                const html = converter.makeHtml(swipes[swipeIndex]);
-                mesBlock.innerHTML = DOMPurify.sanitize(html);
-            } else {
-                // Fallback to plain text if libraries are not found
-                mesBlock.textContent = swipes[swipeIndex];
-            }
-        }
-
-        const swipeCounter = messageElement.querySelector('.swipes-counter');
-        if (swipeCounter) {
-            swipeCounter.textContent = `${swipeIndex + 1}/${swipes.length}`;
-        }
-
-        // Trigger a save
-        context.saveChat();
-
-        // Close the modal
+        // Close the modal first to ensure it doesn't interfere.
         closeModal();
+
+        // Find and click the edit button for the message.
+        const editButton = messageElement.querySelector('.mes_edit');
+        if (editButton) {
+            editButton.click();
+
+            // A short delay is necessary to allow the UI to update and the "Confirm" button to appear.
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            // Find and click the "Confirm" button to trigger the re-render.
+            const doneButton = messageElement.querySelector('.mes_edit_done');
+            if (doneButton) {
+                doneButton.click();
+            } else {
+                console.error('Swipe History: Could not find the confirm edit button. Saving manually.');
+                context.saveChat(); // Fallback to manual save if the button isn't found.
+            }
+        } else {
+            console.error('Swipe History: Could not find the edit button. Saving manually.');
+            context.saveChat(); // Fallback to manual save if the button isn't found.
+        }
     }
 
     function showSwipesModal(messageElement, mesId, swipes) {
