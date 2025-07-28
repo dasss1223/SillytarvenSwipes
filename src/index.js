@@ -135,23 +135,33 @@
         };
     }
 
-    const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            if (mutation.addedNodes.length > 0) {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.matches('.mes[is_user="false"]')) {
-                        addHistoryButton(node);
-                    }
-                });
-            }
+    function initialize() {
+        const chatElement = document.getElementById('chat');
+        if (!chatElement || !window.SillyTavern || !window.SillyTavern.getContext) {
+            // If the chat element or context isn't ready, wait and try again.
+            setTimeout(initialize, 250);
+            return;
         }
-    });
 
-    const chatElement = document.getElementById('chat');
-    if (chatElement) {
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.addedNodes.length > 0) {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1 && node.matches('.mes[is_user="false"]')) {
+                            addHistoryButton(node);
+                        }
+                    });
+                }
+            }
+        });
+
         observer.observe(chatElement, { childList: true, subtree: true });
-        // Initial run
+
+        // Initial run for messages already on the page
         chatElement.querySelectorAll('.mes[is_user="false"]').forEach(addHistoryButton);
     }
+
+    // Start the initialization process
+    initialize();
 
 })();
